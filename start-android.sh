@@ -21,6 +21,5 @@ checkIfbinaryExists "emulator" "Please include the '\$ANDROID_HOME\\emulator' in
 #get the abd location
 checkIfbinaryExists "adb" "Please include the '\$ANDROID_HOME\\platform-tools' in your '\$PATH' environment!"
 
-devices=$(avdmanager list adb)
-
-echo $devices
+# get the basename of the device we are going to use
+deviceBaseName=$(basename $(avdmanager list avd | grep Path: | sed "s/Path\:/ /g") ".avd")
