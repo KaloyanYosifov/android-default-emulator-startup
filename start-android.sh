@@ -12,7 +12,12 @@ checkIfbinaryExists()
     fi
 }
 
-# get the lcoation of abd binary of android studio
+# get the location of android
 checkIfbinaryExists "android" "Please install Android Studio!"
 
 android=$(which android)
+
+#get the emulator location
+checkIfbinaryExists "emulator" "Please include the "\$ANDROID_HOME\\emulator" in your "\$PATH" environment!"
+
+android=$(which emulator)
