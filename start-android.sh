@@ -13,17 +13,14 @@ checkIfbinaryExists()
 }
 
 # get the location of android
-checkIfbinaryExists "android" "Please install Android Studio!"
-
-android=$(which android)
+checkIfbinaryExists "avdmanager" "Please install Android Studio!"
 
 #get the emulator location
 checkIfbinaryExists "emulator" "Please include the '\$ANDROID_HOME\\emulator' in your '\$PATH' environment!"
 
-emulator=$(which emulator)
-
 #get the abd location
 checkIfbinaryExists "adb" "Please include the '\$ANDROID_HOME\\platform-tools' in your '\$PATH' environment!"
 
-adb=$(which adb)
+devices=$(avdmanager list adb)
 
+echo $devices
