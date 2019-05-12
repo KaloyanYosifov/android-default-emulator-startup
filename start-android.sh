@@ -23,6 +23,7 @@ checkIfbinaryExists "emulator" "Please include the '\$ANDROID_HOME\\emulator' in
 emulator=$(which emulator)
 
 #get the abd location
-checkIfbinaryExists "abd" "Please include the '\$ANDROID_HOME\\platform-tools' in your '\$PATH' environment!"
+checkIfbinaryExists "adb" "Please include the '\$ANDROID_HOME\\platform-tools' in your '\$PATH' environment!"
 
-abd=$(which abd)
+adb=$(which adb)
+
