@@ -38,3 +38,13 @@ if [ -z $(ps -C adb --no-headers -o pid) ]; then
     echo "Starting adb daemon server!"
     $(adb start-server)
 fi
+
+echo "Starting emulator"
+
+options=""
+
+if [ "$1" == "-system-libs" ]; then
+    options="$options -use-system-libs"
+fi
+
+emulator @$deviceBaseName $options
