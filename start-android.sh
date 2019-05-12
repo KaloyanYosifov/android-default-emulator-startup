@@ -43,8 +43,13 @@ echo "Starting emulator"
 
 options=""
 
-if [ "$1" == "-system-libs" ]; then
+if [ "$1" == "-system-libs" ] || [ "$2" == '-system-libs' ]; then
     options="$options -use-system-libs"
+fi
+
+if [ "$1" == "-d" ] || [ "$2" == '-d' ]; then
+    emulator @$deviceBaseName $options > /dev/null 2>&1 &
+    exit 0
 fi
 
 emulator @$deviceBaseName $options
