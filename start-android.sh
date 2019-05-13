@@ -2,11 +2,12 @@
 
 checkIfbinaryExists()
 {
+    # $1 is the binary we are looking for
+    # $2 is the message we are going to echo to the command user
+
     # get the binary location
     # and send the errors (2>) to null
-    binaryLocation=$(which $1 2> /dev/null)
-    
-    if [ -z $binaryLocation ]; then
+    if [ -z $(which $1 2> /dev/null) ]; then
         echo "$2"
         exit 0
     fi
@@ -34,7 +35,9 @@ echo
 # if the if statement is empty it means no pid is found with that command name
 # if not we start the server
 
-if [ -z $(ps -C adb --no-headers -o pid) ]; then
+# if pgrep is empty when checking for adb
+# start the daemon server
+if [ -z $(pgrep adb) ]; then
     echo "Starting adb daemon server!"
     $(adb start-server)
 fi
