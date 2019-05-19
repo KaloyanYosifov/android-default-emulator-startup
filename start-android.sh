@@ -1,16 +1,23 @@
 #! /bin/bash
 
-checkIfbinaryExists()
-{
-    # $1 is the binary we are looking for
-    # $2 is the message we are going to echo to the command user
+function checkIfbinaryExists() {
+    # execute the command and pass all output stdout and stderr to the void
+    which $1 &> /dev/null
+    
+    # check the exist status
+    # if it is not 0
+    # then the command has failed
 
-    # get the binary location
-    # and send the errors (2>) to null
-    if [ -z $(which $1 2> /dev/null) ]; then
+    if [ $? -ne 0 ]; then
         echo "$2"
-        exit 0
+        # exit with an error
+        exit 1
     fi
+}
+
+function scriptUsage() {
+    echo "You can use [-d or --detached to detach emulator from the terminal] [-system-libs use the libraries of the system instead of the android environement]"
+    exit 0
 }
 
 # get the location of android
@@ -26,14 +33,13 @@ checkIfbinaryExists "adb" "Please include the '\$ANDROID_HOME\\platform-tools' i
 # this is still work in progress
 # TODO check if we have multiple devices how is this command going to handle it AND find a better way to get the devices name
 echo "Getting Device Name"
-deviceBaseName=$(basename $(avdmanager list avd | grep Path: | sed "s/Path\:/ /g") ".avd")
 
+# get the device name of the first device we find in the avd list
+# we use awk to check if we are on the first line
+# then we use the basename to remove the file path and extension to get the name of the device
+deviceBaseName=$(basename $(avdmanager list avd | grep Path: | awk '{ if (NR == 1) { found_device=$2 } } END{ print(found_device) }') ".avd")
 # empty line
 echo
-
-# check if there is a process where adb is running it
-# if the if statement is empty it means no pid is found with that command name
-# if not we start the server
 
 # if pgrep is empty when checking for adb
 # start the daemon server
@@ -45,13 +51,30 @@ fi
 echo "Starting emulator"
 
 options=""
+detached=false
 
-if [ "$1" == "-system-libs" ] || [ "$2" == '-system-libs' ]; then
-    options="$options -use-system-libs"
-fi
+while [ $# -ne 0 ]; do
+    case $1 in
+        "-system-libs" )
+            options="$options -use-system-libs"
+            shift
+            ;;
+        "-d" | "--detached" )
+            detached=true
+            shift
+            ;;
+        "-h" | "--help" )
+            scriptUsage
+            shift
+            ;;
+        * )
+            shift
+            ;;
+    esac
+done
 
-if [ "$1" == "-d" ] || [ "$2" == '-d' ]; then
-    emulator @$deviceBaseName $options > /dev/null 2>&1 &
+if [ $detached = true ]; then
+    emulator @$deviceBaseName $options &> /dev/null &
     exit 0
 fi
 
